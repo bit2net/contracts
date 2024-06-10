@@ -1,1 +1,3 @@
-WBTC2BridgeV1Test:testDeploy() (gas: 263821)
+WWBTCTest:testDeploy() (gas: 615014)
+WWBTCTest:testDeposit() (gas: 93271)
+WWBTCTest:testWithdraw() (gas: 98912)
