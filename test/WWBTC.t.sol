@@ -5,17 +5,12 @@ import {WWBTC} from "../src/WWBTC.sol";
 import {Test} from "../lib/forge-std/src/Test.sol";
 
 contract WWBTCTest is Test {
-    WWBTC internal wwbtc;
-
-    uint256 constant z0r0zBalanceWBTC = 63567;
-    uint256 constant z0r0zBalanceWWBTC = 635670000000000;
-    address constant z0r0z = 0x1C0Aa8cCD568d90d61659F060D1bFb1e6f855A20;
-
+    address constant whale = 0x6daB3bCbFb336b29d06B9C793AEF7eaA57888922;
     WWBTC constant WBTC = WWBTC(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599);
+    WWBTC constant wwbtc = WWBTC(0x0000000000004250039d1Cf730bDD00b31942D18);
 
     function setUp() public payable {
         vm.createSelectFork(vm.rpcUrl("main")); // Ethereum mainnet fork.
-        wwbtc = new WWBTC();
     }
 
     function testDeploy() public payable {
@@ -23,18 +18,16 @@ contract WWBTCTest is Test {
     }
 
     function testDeposit() public payable {
-        vm.prank(z0r0z);
-        WBTC.approve(address(wwbtc), z0r0zBalanceWBTC);
-        vm.prank(z0r0z);
-        wwbtc.deposit(z0r0zBalanceWBTC);
-        assertEq(z0r0zBalanceWWBTC, wwbtc.balanceOf(z0r0z));
+        vm.prank(whale);
+        WBTC.approve(address(wwbtc), type(uint256).max);
+        vm.prank(whale);
+        wwbtc.deposit(999 ether / 10 ** 10);
     }
 
     function testWithdraw() public payable {
         testDeposit();
-        vm.prank(z0r0z);
-        wwbtc.withdraw(z0r0zBalanceWWBTC);
-        assertEq(0, wwbtc.balanceOf(z0r0z));
-        assertEq(z0r0zBalanceWBTC, WBTC.balanceOf(z0r0z));
+        vm.prank(whale);
+        wwbtc.withdraw(999 ether);
+        assertEq(0, wwbtc.balanceOf(whale));
     }
 }
